@@ -17,4 +17,12 @@
 # include <stdlib.h> // for malloc() and free()
 # include <unistd.h> // for read()
 
+// prototypes
+char	*get_next_line(int fd);
+
+#endif
+
+// buffer size default value
+#ifndef BUFFER_SIZE
+# define BUFFER_SIZE 99
 #endif
