@@ -24,13 +24,20 @@ char	*get_next_line(int fd)
 #include <stdio.h>
 #include <fcntl.h>
 
+// don't forget to always include a single (or two!) file path, silly
 int	main(int argc, char **argv)
 {
-	int	fd;
+	int	fd1;
+	int	fd2;
 
-	if (argc != 2)
+	if (argc != 3)
 		return (0);
-	fd = open(argv[1], O_RDONLY);
-	printf("%s", get_next_line(fd));
-	close(fd);
+	fd1 = open(argv[1], O_RDONLY);
+	fd2 = open(argv[2], O_RDONLY);
+	printf("%s", get_next_line(fd1));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd1));
+	printf("%s", get_next_line(fd2));
+	close(fd1);
+	close(fd2);
 }
