@@ -14,8 +14,9 @@
 # define GET_NEXT_LINE_H
 
 // libraries
-# include <stdlib.h> // for malloc() and free()
-# include <unistd.h> // for read()
+# include <stdlib.h>	// for malloc() and free()
+# include <unistd.h> 	// for read()
+# include <stdio.h>		// for the EOF macro
 
 // prototypes
 char	*get_next_line(int fd);
@@ -24,5 +25,5 @@ char	*get_next_line(int fd);
 
 // buffer size default value
 #ifndef BUFFER_SIZE
-# define BUFFER_SIZE 99
+# define BUFFER_SIZE 999
 #endif

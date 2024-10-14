@@ -14,10 +14,17 @@
 
 char	*get_next_line(int fd)
 {
+	int		i;
 	char	*buffer;
 
 	buffer = malloc(BUFFER_SIZE * sizeof(char));
-	read(fd, buffer, BUFFER_SIZE);
+	read(fd, buffer, 1);
+	i = 0;
+	while (buffer[i] != EOF && buffer[i] != '\n' && i < BUFFER_SIZE)
+	{
+		i++;
+		read(fd, buffer + i, 1);
+	}
 	return (buffer);
 }
 
