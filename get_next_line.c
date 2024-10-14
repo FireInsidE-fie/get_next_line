@@ -14,29 +14,26 @@
 
 char	*get_next_line(int fd)
 {
-	int		i;
-	char	*buffer;
-
+	char		*buffer;
+	static char	*stash;
+	
 	buffer = malloc(BUFFER_SIZE * sizeof(char));
+	stash = malloc(STASH_SIZE * sizeof(char));
 	if (!buffer)
 		return (NULL);
-	if (!read(fd, buffer, 1))
-	{
-		free(buffer);
-		return (NULL);
-	}
-	i = 0;
-	while (buffer[i] != EOF && buffer[i] != '\n' && ++i < BUFFER_SIZE)
-	{
-		if (!read(fd, buffer + i, 1))
+	while (!ft_strchr(stash, '\n'))
+	{	
+		if (!read(fd, buffer, BUFFER_SIZE))
 		{
 			free(buffer);
 			return (NULL);
 		}
+		ft_strlcat(stash, buffer, BUFFER_SIZE);
 	}
-	return (buffer);
+	free(buffer);
+	return (ft_substr(stash, 0, ft_strchr(stash, '\n') - stash + 1));
 }
-/*
+
 #include <stdio.h>
 #include <fcntl.h>
 
@@ -58,7 +55,7 @@ int	main(int argc, char **argv)
 	//printf("%s", get_next_line(fd2));
 	
 	str = get_next_line(fd1);
-	while (str && *str)
+	while (str)
 	{
 		printf("%s", str);
 		str = get_next_line(fd1);
@@ -66,4 +63,3 @@ int	main(int argc, char **argv)
 	close(fd1);
 	//close(fd2);
 }
-*/

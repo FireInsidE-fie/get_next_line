@@ -20,8 +20,15 @@
 
 // prototypes
 char	*get_next_line(int fd);
+size_t	ft_strlen(const char *s);
+char	*ft_strchr(const char *s, int c);
+char	*ft_substr(char const *s, unsigned int start, size_t len);
+size_t	ft_strlcat(char *dst, const char *src, size_t dstsize);
 
-// buffer size default value
+// buffer and stash size default values
+# ifndef STASH_SIZE
+#  define STASH_SIZE 999
+# endif
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 999
 # endif
