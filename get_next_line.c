@@ -16,9 +16,11 @@ char	*get_next_line(int fd)
 {
 	char		*buffer;
 	static char	*stash;
+	char		*line;
 	
 	buffer = malloc(BUFFER_SIZE * sizeof(char));
-	stash = malloc(STASH_SIZE * sizeof(char));
+	if (!stash)
+		stash = malloc(STASH_SIZE * sizeof(char));
 	if (!buffer)
 		return (NULL);
 	while (!ft_strchr(stash, '\n'))
@@ -31,7 +33,9 @@ char	*get_next_line(int fd)
 		ft_strlcat(stash, buffer, BUFFER_SIZE);
 	}
 	free(buffer);
-	return (ft_substr(stash, 0, ft_strchr(stash, '\n') - stash + 1));
+	line = ft_substr(stash, 0, ft_strchr(stash, '\n') - stash + 1);
+	stash += ft_strchr(stash, '\n') - stash + 1;
+	return (line);
 }
 
 #include <stdio.h>
