@@ -20,14 +20,23 @@ char	*get_next_line(int fd)
 	buffer = malloc(BUFFER_SIZE * sizeof(char));
 	if (!buffer)
 		return (NULL);
-	read(fd, buffer, 1);
+	if (!read(fd, buffer, 1))
+	{
+		free(buffer);
+		return (NULL);
+	}
 	i = 0;
 	while (buffer[i] != EOF && buffer[i] != '\n' && ++i < BUFFER_SIZE)
+	{
 		if (!read(fd, buffer + i, 1))
+		{
+			free(buffer);
 			return (NULL);
+		}
+	}
 	return (buffer);
 }
-
+/*
 #include <stdio.h>
 #include <fcntl.h>
 
@@ -42,14 +51,14 @@ int	main(int argc, char **argv)
 		return (0);
 	fd1 = open(argv[1], O_RDONLY);
 	//fd2 = open(argv[2], O_RDONLY);
-	/*
-	printf("%s", get_next_line(fd1));
-	printf("%s", get_next_line(fd2));
-	printf("%s", get_next_line(fd1));
-	printf("%s", get_next_line(fd2));
-	*/
+	
+	//printf("%s", get_next_line(fd1));
+	//printf("%s", get_next_line(fd2));
+	//printf("%s", get_next_line(fd1));
+	//printf("%s", get_next_line(fd2));
+	
 	str = get_next_line(fd1);
-	while (*str)
+	while (str && *str)
 	{
 		printf("%s", str);
 		str = get_next_line(fd1);
@@ -57,3 +66,4 @@ int	main(int argc, char **argv)
 	close(fd1);
 	//close(fd2);
 }
+*/
