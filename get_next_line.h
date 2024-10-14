@@ -21,9 +21,9 @@
 // prototypes
 char	*get_next_line(int fd);
 
-#endif
-
 // buffer size default value
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 999
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 999
+# endif
+
 #endif
