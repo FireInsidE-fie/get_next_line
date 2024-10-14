@@ -27,7 +27,7 @@ size_t	ft_strlcat(char *dst, const char *src, size_t dstsize);
 
 // buffer and stash size default values
 # ifndef STASH_SIZE
-#  define STASH_SIZE 999
+#  define STASH_SIZE 999999
 # endif
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 999

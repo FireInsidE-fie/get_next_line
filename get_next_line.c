@@ -17,14 +17,16 @@ char	*get_next_line(int fd)
 	char		*buffer;
 	static char	*stash;
 	char		*line;
-	
+
+	if (read(fd, 0, 0) < 0)
+		return (NULL);
 	buffer = malloc(BUFFER_SIZE * sizeof(char));
 	if (!stash)
 		stash = malloc(STASH_SIZE * sizeof(char));
 	if (!buffer)
 		return (NULL);
 	while (!ft_strchr(stash, '\n'))
-	{	
+	{
 		if (!read(fd, buffer, BUFFER_SIZE))
 		{
 			free(buffer);
@@ -46,24 +48,24 @@ int	main(int argc, char **argv)
 {
 	int		fd1;
 	//int		fd2;
-	char	*str;
+	//char	*str;
 
 	if (argc != 2)
 		return (0);
 	fd1 = open(argv[1], O_RDONLY);
 	//fd2 = open(argv[2], O_RDONLY);
 	
-	//printf("%s", get_next_line(fd1));
+	close(fd1);
+	printf("%s", get_next_line(fd1));
 	//printf("%s", get_next_line(fd2));
-	//printf("%s", get_next_line(fd1));
+	printf("%s", get_next_line(fd1));
 	//printf("%s", get_next_line(fd2));
 	
-	str = get_next_line(fd1);
-	while (str)
-	{
-		printf("%s", str);
-		str = get_next_line(fd1);
-	}
-	close(fd1);
+	//str = get_next_line(fd1);
+	//while (str)
+	//{
+	//	printf("%s", str);
+	//	str = get_next_line(fd1);
+	//}
 	//close(fd2);
 }

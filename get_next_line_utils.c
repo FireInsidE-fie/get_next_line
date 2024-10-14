@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "get_next_line.h"
+
 /* ft_strlen()
  * returns the size of string *s, trailing null character excluded.
 */
