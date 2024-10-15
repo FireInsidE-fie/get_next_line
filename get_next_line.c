@@ -20,11 +20,18 @@ char	*get_next_line(int fd)
 
 	if (read(fd, 0, 0) < 0)
 		return (NULL);
-	buffer = malloc(BUFFER_SIZE * sizeof(char));
 	if (!stash)
+	{
 		stash = malloc(STASH_SIZE * sizeof(char));
+		if (!stash)
+			return (NULL);
+	}
+	buffer = malloc(BUFFER_SIZE * sizeof(char));
 	if (!buffer)
+	{
+		free(stash);
 		return (NULL);
+	}
 	while (!ft_strchr(stash, '\n'))
 	{
 		if (!read(fd, buffer, BUFFER_SIZE))
@@ -32,14 +39,24 @@ char	*get_next_line(int fd)
 			free(buffer);
 			return (NULL);
 		}
-		ft_strlcat(stash, buffer, BUFFER_SIZE);
+		stash = ft_strjoin(stash, buffer);
+		if (!stash)
+		{
+			free(buffer);
+			return (NULL);
+		}
 	}
 	free(buffer);
 	line = ft_substr(stash, 0, ft_strchr(stash, '\n') - stash + 1);
+	if (!line)
+	{
+		free(stash);
+		return (NULL);
+	}
 	stash += ft_strchr(stash, '\n') - stash + 1;
 	return (line);
 }
-
+/*
 #include <stdio.h>
 #include <fcntl.h>
 
@@ -55,12 +72,12 @@ int	main(int argc, char **argv)
 	fd1 = open(argv[1], O_RDONLY);
 	//fd2 = open(argv[2], O_RDONLY);
 	
-	close(fd1);
 	printf("%s", get_next_line(fd1));
 	//printf("%s", get_next_line(fd2));
 	printf("%s", get_next_line(fd1));
 	//printf("%s", get_next_line(fd2));
 	
+	close(fd1);
 	//str = get_next_line(fd1);
 	//while (str)
 	//{
@@ -69,3 +86,4 @@ int	main(int argc, char **argv)
 	//}
 	//close(fd2);
 }
+*/

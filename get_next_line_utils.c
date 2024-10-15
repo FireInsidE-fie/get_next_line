@@ -93,3 +93,30 @@ size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
 		return ((size_t)(dstsize + ft_strlen(src)));
 	return ((size_t)(o_dstsize + ft_strlen(src)));
 }
+
+/* ft_strjoin()
+ * fuses the strings *s1 and *s2 together, null terminating the resulting string
+ * and returning it.
+*/
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	char	*joined;
+	int		i;
+
+	joined = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	if (!joined)
+		return (NULL);
+	i = 0;
+	while (*s1)
+	{
+		joined[i++] = *s1;
+		s1++;
+	}
+	while (*s2)
+	{
+		joined[i++] = *s2;
+		s2++;
+	}
+	joined[i] = '\0';
+	return (joined);
+}
