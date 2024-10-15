@@ -31,14 +31,17 @@ size_t	ft_strlen(const char *s)
 */
 char	*ft_strchr(const char *s, int c)
 {
-	while (*s)
+	size_t	i;
+
+	i = 0;
+	while (i < ft_strlen(s))
 	{
-		if (*s == (char)c)
-			return ((char *)s);
-		s++;
+		if (s[i] == (char)c)
+			return ((char *)(s + i));
+		i++;
 	}
-	if (*s == (char)c)
-		return ((char *)s);
+	if (s[i] == (char)c)
+		return ((char *)(s + i));
 	return (0);
 }
 
@@ -102,8 +105,9 @@ char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*joined;
 	int		i;
+	int		j;
 
-	joined = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	joined = malloc(ft_strlen(s1) + BUFFER_SIZE + 1);
 	if (!joined)
 		return (NULL);
 	i = 0;
@@ -112,10 +116,11 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		joined[i++] = *s1;
 		s1++;
 	}
-	while (*s2)
+	j = 0;
+	while (j < BUFFER_SIZE)
 	{
-		joined[i++] = *s2;
-		s2++;
+		joined[i++] = s2[j];
+		j++;
 	}
 	joined[i] = '\0';
 	return (joined);

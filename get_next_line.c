@@ -15,18 +15,19 @@
 char	*get_next_line(int fd)
 {
 	char		*buffer;
-	static char	*stash;
 	char		*line;
+	static char	*stash;
 
 	if (read(fd, 0, 0) < 0)
 		return (NULL);
 	if (!stash)
 	{
-		stash = malloc(STASH_SIZE * sizeof(char));
+		stash = malloc(sizeof(char));
 		if (!stash)
 			return (NULL);
+		*stash = '\0';
 	}
-	buffer = malloc(BUFFER_SIZE * sizeof(char));
+	buffer = malloc(sizeof(char) * BUFFER_SIZE);
 	if (!buffer)
 	{
 		free(stash);
@@ -34,17 +35,13 @@ char	*get_next_line(int fd)
 	}
 	while (!ft_strchr(stash, '\n'))
 	{
-		if (!read(fd, buffer, BUFFER_SIZE))
+		if (read(fd, buffer, BUFFER_SIZE) <= 0)
 		{
 			free(buffer);
+			free(stash);
 			return (NULL);
 		}
 		stash = ft_strjoin(stash, buffer);
-		if (!stash)
-		{
-			free(buffer);
-			return (NULL);
-		}
 	}
 	free(buffer);
 	line = ft_substr(stash, 0, ft_strchr(stash, '\n') - stash + 1);
@@ -53,10 +50,12 @@ char	*get_next_line(int fd)
 		free(stash);
 		return (NULL);
 	}
-	stash += ft_strchr(stash, '\n') - stash + 1;
+	stash = ft_substr(stash, ft_strchr(stash, '\n') - stash + 1, ft_strlen(stash) - (ft_strchr(stash, '\n') - stash + 1));
+	if (!stash)
+		return (NULL);
 	return (line);
 }
-/*
+
 #include <stdio.h>
 #include <fcntl.h>
 
@@ -77,13 +76,12 @@ int	main(int argc, char **argv)
 	printf("%s", get_next_line(fd1));
 	//printf("%s", get_next_line(fd2));
 	
-	close(fd1);
 	//str = get_next_line(fd1);
 	//while (str)
 	//{
 	//	printf("%s", str);
 	//	str = get_next_line(fd1);
 	//}
+	close(fd1);
 	//close(fd2);
 }
-*/
