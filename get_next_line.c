@@ -12,9 +12,37 @@
 
 #include "get_next_line.h"
 
-char	*get_next_line(int fd)
+static char	*parse_line(char **stash, int fd)
 {
 	char		*buffer;
+	char		*tmp;
+
+	buffer = malloc(sizeof(char) * BUFFER_SIZE);
+	if (!buffer)
+	{
+		free(*stash);
+		*stash = NULL;
+		return (NULL);
+	}
+	while (!ft_strchr(*stash, '\n'))
+	{
+		if (read(fd, buffer, BUFFER_SIZE) <= 0)
+		{
+			free(buffer);
+			free(*stash);
+			*stash = NULL;
+			return (NULL);
+		}
+		tmp = ft_strjoin(*stash, buffer);
+		free(*stash);
+		*stash = tmp;
+	}
+	free(buffer);
+	return (ft_substr(*stash, 0, ft_strchr(*stash, '\n') - *stash + 1));
+}
+
+char	*get_next_line(int fd)
+{
 	char		*line;
 	char		*tmp;
 	static char	*stash;
@@ -28,37 +56,15 @@ char	*get_next_line(int fd)
 			return (NULL);
 		*stash = '\0';
 	}
-	buffer = malloc(sizeof(char) * BUFFER_SIZE);
-	if (!buffer)
-	{
-		free(stash);
-		return (NULL);
-	}
-	while (!ft_strchr(stash, '\n'))
-	{
-		if (read(fd, buffer, BUFFER_SIZE) <= 0)
-		{
-			free(buffer);
-			free(stash);
-			stash = NULL;
-			return (NULL);
-		}
-		tmp = ft_strjoin(stash, buffer);
-		free(stash);
-		stash = tmp;
-	}
-	free(buffer);
-	line = ft_substr(stash, 0, ft_strchr(stash, '\n') - stash + 1);
+	line = parse_line(&stash, fd);
 	if (!line)
-	{
-		free(stash);
 		return (NULL);
-	}
-	tmp = ft_substr(stash, ft_strchr(stash, '\n') - stash + 1, ft_strlen(stash) - (ft_strchr(stash, '\n') - stash + 1));
+	tmp = ft_substr(stash, ft_strchr(stash, '\n') - stash + 1,
+			ft_strlen(stash) - (ft_strchr(stash, '\n') - stash + 1));
 	free(stash);
+	stash = tmp;
 	if (!tmp)
 		return (NULL);
-	stash = tmp;
 	return (line);
 }
 /*
