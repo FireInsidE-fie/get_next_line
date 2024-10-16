@@ -12,6 +12,9 @@
 
 #include "get_next_line.h"
 
+/* parse_line()
+ *
+*/
 static char	*parse_line(char **stash, int fd)
 {
 	char		*buffer;
@@ -38,7 +41,9 @@ static char	*parse_line(char **stash, int fd)
 		*stash = tmp;
 	}
 	free(buffer);
-	return (ft_substr(*stash, 0, ft_strchr(*stash, '\n') - *stash + 1));
+	if (ft_strchr(*stash, '\n'))
+		return (ft_substr(*stash, 0, ft_strchr(*stash, '\n') - *stash + 1));
+	return (ft_substr(*stash, 0, ft_strlen(*stash)));
 }
 
 char	*get_next_line(int fd)
@@ -58,7 +63,11 @@ char	*get_next_line(int fd)
 	}
 	line = parse_line(&stash, fd);
 	if (!line)
+	{
+		free(stash);
+		stash = NULL;
 		return (NULL);
+	}
 	tmp = ft_substr(stash, ft_strchr(stash, '\n') - stash + 1,
 			ft_strlen(stash) - (ft_strchr(stash, '\n') - stash + 1));
 	free(stash);
@@ -67,7 +76,7 @@ char	*get_next_line(int fd)
 		return (NULL);
 	return (line);
 }
-/*
+
 #include <stdio.h>
 #include <fcntl.h>
 
@@ -97,4 +106,3 @@ int	main(int argc, char **argv)
 	close(fd1);
 	//close(fd2);
 }
-*/
