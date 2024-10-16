@@ -16,6 +16,7 @@ char	*get_next_line(int fd)
 {
 	char		*buffer;
 	char		*line;
+	char		*tmp;
 	static char	*stash;
 
 	if (read(fd, 0, 0) < 0)
@@ -39,9 +40,12 @@ char	*get_next_line(int fd)
 		{
 			free(buffer);
 			free(stash);
+			stash = NULL;
 			return (NULL);
 		}
-		stash = ft_strjoin(stash, buffer);
+		tmp = ft_strjoin(stash, buffer);
+		free(stash);
+		stash = tmp;
 	}
 	free(buffer);
 	line = ft_substr(stash, 0, ft_strchr(stash, '\n') - stash + 1);
@@ -50,12 +54,14 @@ char	*get_next_line(int fd)
 		free(stash);
 		return (NULL);
 	}
-	stash = ft_substr(stash, ft_strchr(stash, '\n') - stash + 1, ft_strlen(stash) - (ft_strchr(stash, '\n') - stash + 1));
-	if (!stash)
+	tmp = ft_substr(stash, ft_strchr(stash, '\n') - stash + 1, ft_strlen(stash) - (ft_strchr(stash, '\n') - stash + 1));
+	free(stash);
+	if (!tmp)
 		return (NULL);
+	stash = tmp;
 	return (line);
 }
-
+/*
 #include <stdio.h>
 #include <fcntl.h>
 
@@ -63,18 +69,18 @@ char	*get_next_line(int fd)
 int	main(int argc, char **argv)
 {
 	int		fd1;
-	int		fd2;
+	//int		fd2;
 	//char	*str;
 
-	if (argc != 3)
+	if (argc != 2)
 		return (0);
 	fd1 = open(argv[1], O_RDONLY);
-	fd2 = open(argv[2], O_RDONLY);
+	//fd2 = open(argv[2], O_RDONLY);
 	
 	printf("%s", get_next_line(fd1));
-	printf("%s", get_next_line(fd2));
+	//printf("%s", get_next_line(fd2));
 	printf("%s", get_next_line(fd1));
-	printf("%s", get_next_line(fd2));
+	//printf("%s", get_next_line(fd2));
 	
 	//str = get_next_line(fd1);
 	//while (str)
@@ -83,5 +89,6 @@ int	main(int argc, char **argv)
 	//	str = get_next_line(fd1);
 	//}
 	close(fd1);
-	close(fd2);
+	//close(fd2);
 }
+*/
