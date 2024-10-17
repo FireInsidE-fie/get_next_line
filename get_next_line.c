@@ -22,11 +22,10 @@ static char	*parse_line(char **stash, int fd)
 
 	buffer = malloc(sizeof(char) * BUFFER_SIZE);
 	if (!buffer)
-	{
-		free(*stash);
-		*stash = NULL;
 		return (NULL);
-	}
+	if (ft_strchr(*stash, '\n'))
+		return (ft_substr(*stash, 0, ft_strchr(*stash, '\n') - *stash + 1));
+	/**************************************************************************/
 	if (read(fd, buffer, BUFFER_SIZE) <= 0)
 	{
 		free(buffer);
@@ -34,7 +33,13 @@ static char	*parse_line(char **stash, int fd)
 	}
 	tmp = ft_strjoin(*stash, buffer);
 	free(*stash);
+	if (!tmp)
+	{
+		free(buffer);
+		return (NULL);
+	}
 	*stash = tmp;
+	/**************************************************************************/
 	while (!ft_strchr(*stash, '\n'))
 	{
 		if (read(fd, buffer, BUFFER_SIZE) <= 0)
@@ -48,6 +53,11 @@ static char	*parse_line(char **stash, int fd)
 		}
 		tmp = ft_strjoin(*stash, buffer);
 		free(*stash);
+		if (!tmp)
+		{
+			free(buffer);
+			return (NULL);
+		}
 		*stash = tmp;
 	}
 	free(buffer);
@@ -78,42 +88,48 @@ char	*get_next_line(int fd)
 		stash = NULL;
 		return (NULL);
 	}
-	tmp = ft_substr(stash, ft_strchr(stash, '\n') - stash + 1,
-			ft_strlen(stash) - (ft_strchr(stash, '\n') - stash + 1));
-	free(stash);
-	stash = tmp;
-	if (!tmp)
-		return (NULL);
+	if (ft_strchr(stash, '\n'))
+	{
+		tmp = ft_substr(stash, ft_strchr(stash, '\n') - stash + 1,
+				ft_strlen(stash) - (ft_strchr(stash, '\n') - stash));
+		free(stash);
+		stash = tmp;
+		if (!tmp)
+			return (NULL);
+	}
 	return (line);
 }
-/*
+
 #include <stdio.h>
 #include <fcntl.h>
 
 // don't forget to always include a single (or two!) file path, silly
 int	main(int argc, char **argv)
 {
-	int		fd1;
-	//int		fd2;
-	//char	*str;
+	//int		fd1;
+	int		fd2;
+	char	*str;
 
 	if (argc != 2)
 		return (0);
+/*
 	fd1 = open(argv[1], O_RDONLY);
-	//fd2 = open(argv[2], O_RDONLY);
 	
+	printf("[!] - Reading two lines...\n");
 	printf("%s", get_next_line(fd1));
-	//printf("%s", get_next_line(fd2));
 	printf("%s", get_next_line(fd1));
-	//printf("%s", get_next_line(fd2));
-	
-	//str = get_next_line(fd1);
-	//while (str)
-	//{
-	//	printf("%s", str);
-	//	str = get_next_line(fd1);
-	//}
+
 	close(fd1);
-	//close(fd2);
-}
 */
+	fd2 = open(argv[1], O_RDONLY);
+
+	printf("\n\n[!] - Reading entire file...\n");
+	str = get_next_line(fd2);
+	while (str)
+	{
+		printf("%s", str);
+		str = get_next_line(fd2);
+	}
+
+	close(fd2);
+}
