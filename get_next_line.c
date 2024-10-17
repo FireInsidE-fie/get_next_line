@@ -20,11 +20,11 @@ static char	*parse_line(char **stash, int fd)
 	char		*buffer;
 	char		*tmp;
 
+	if (ft_strchr(*stash, '\n'))
+		return (ft_substr(*stash, 0, ft_strchr(*stash, '\n') - *stash + 1));
 	buffer = malloc(sizeof(char) * BUFFER_SIZE);
 	if (!buffer)
 		return (NULL);
-	if (ft_strchr(*stash, '\n'))
-		return (ft_substr(*stash, 0, ft_strchr(*stash, '\n') - *stash + 1));
 	/**************************************************************************/
 	if (read(fd, buffer, BUFFER_SIZE) <= 0)
 	{
@@ -93,9 +93,12 @@ char	*get_next_line(int fd)
 		tmp = ft_substr(stash, ft_strchr(stash, '\n') - stash + 1,
 				ft_strlen(stash) - (ft_strchr(stash, '\n') - stash));
 		free(stash);
-		stash = tmp;
 		if (!tmp)
+		{
+			free(line);
 			return (NULL);
+		}
+		stash = tmp;
 	}
 	return (line);
 }
@@ -130,6 +133,8 @@ int	main(int argc, char **argv)
 		printf("%s", str);
 		str = get_next_line(fd2);
 	}
+
+	free(str);
 
 	close(fd2);
 }
