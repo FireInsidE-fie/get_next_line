@@ -27,11 +27,21 @@ static char	*parse_line(char **stash, int fd)
 		*stash = NULL;
 		return (NULL);
 	}
+	if (read(fd, buffer, BUFFER_SIZE) <= 0)
+	{
+		free(buffer);
+		return (NULL);
+	}
+	tmp = ft_strjoin(*stash, buffer);
+	free(*stash);
+	*stash = tmp;
 	while (!ft_strchr(*stash, '\n'))
 	{
 		if (read(fd, buffer, BUFFER_SIZE) <= 0)
 		{
 			free(buffer);
+			if (read(fd, buffer, BUFFER_SIZE) == 0)
+				return (ft_strjoin("", *stash));
 			free(*stash);
 			*stash = NULL;
 			return (NULL);
@@ -76,7 +86,7 @@ char	*get_next_line(int fd)
 		return (NULL);
 	return (line);
 }
-
+/*
 #include <stdio.h>
 #include <fcntl.h>
 
@@ -106,3 +116,4 @@ int	main(int argc, char **argv)
 	close(fd1);
 	//close(fd2);
 }
+*/

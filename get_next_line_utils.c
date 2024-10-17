@@ -117,7 +117,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		s1++;
 	}
 	j = 0;
-	while (j < BUFFER_SIZE)
+	while (j < BUFFER_SIZE && s2[j])
 	{
 		joined[i++] = s2[j];
 		j++;
