@@ -107,7 +107,7 @@ char	*get_next_line(int fd)
 	}
 	return (line);
 }
-/*
+
 #include <stdio.h>
 #include <fcntl.h>
 
@@ -143,4 +143,3 @@ int	main(int argc, char **argv)
 
 	close(fd2);
 }
-*/
