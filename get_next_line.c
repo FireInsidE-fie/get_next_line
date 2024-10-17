@@ -44,9 +44,12 @@ static char	*parse_line(char **stash, int fd)
 	{
 		if (read(fd, buffer, BUFFER_SIZE) <= 0)
 		{
-			free(buffer);
 			if (read(fd, buffer, BUFFER_SIZE) == 0)
-				return (ft_strjoin("", *stash));
+			{
+				free(buffer);
+				return (ft_strjoin("", *stash)); // leak?
+			}
+			free(buffer);
 			free(*stash);
 			*stash = NULL;
 			return (NULL);
@@ -56,6 +59,7 @@ static char	*parse_line(char **stash, int fd)
 		if (!tmp)
 		{
 			free(buffer);
+			*stash = NULL;
 			return (NULL);
 		}
 		*stash = tmp;
@@ -96,13 +100,14 @@ char	*get_next_line(int fd)
 		if (!tmp)
 		{
 			free(line);
+			stash = NULL;
 			return (NULL);
 		}
 		stash = tmp;
 	}
 	return (line);
 }
-
+/*
 #include <stdio.h>
 #include <fcntl.h>
 
@@ -115,15 +120,15 @@ int	main(int argc, char **argv)
 
 	if (argc != 2)
 		return (0);
-/*
-	fd1 = open(argv[1], O_RDONLY);
-	
-	printf("[!] - Reading two lines...\n");
-	printf("%s", get_next_line(fd1));
-	printf("%s", get_next_line(fd1));
 
-	close(fd1);
-*/
+	// fd1 = open(argv[1], O_RDONLY);
+	
+	// printf("[!] - Reading two lines...\n");
+	// printf("%s", get_next_line(fd1));
+	// printf("%s", get_next_line(fd1));
+
+	// close(fd1);
+
 	fd2 = open(argv[1], O_RDONLY);
 
 	printf("\n\n[!] - Reading entire file...\n");
@@ -138,3 +143,4 @@ int	main(int argc, char **argv)
 
 	close(fd2);
 }
+*/
