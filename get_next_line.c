@@ -30,6 +30,7 @@ static char	*parse_line(char **stash, int fd)
 	while (read_count > 0)
 	{
 		read_count = read(fd, buffer, BUFFER_SIZE);
+		buffer[read_count] = 0;
 		if (read_count <= 0)
 		{
 			if (read_count == 0 && ft_strlen(*stash) > 0)
@@ -51,7 +52,7 @@ static char	*parse_line(char **stash, int fd)
 			return (NULL);
 		}
 		*stash = tmp;
-		if (!ft_strchr(*stash, '\n'))
+		if (ft_strchr(*stash, '\n'))
 			break ;
 	}
 	free(buffer);
