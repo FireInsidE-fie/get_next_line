@@ -19,32 +19,20 @@ static char	*parse_line(char **stash, int fd)
 {
 	char		*buffer;
 	char		*tmp;
+	size_t		read_count;
 
 	if (ft_strchr(*stash, '\n'))
 		return (ft_substr(*stash, 0, ft_strchr(*stash, '\n') - *stash + 1));
-	buffer = malloc(sizeof(char) * BUFFER_SIZE);
+	buffer = ft_calloc(sizeof(char), BUFFER_SIZE);
 	if (!buffer)
 		return (NULL);
-	/**************************************************************************/
-	if (read(fd, buffer, BUFFER_SIZE) <= 0)
+	read_count = 1;
+	while (read_count > 0)
 	{
-		free(buffer);
-		return (NULL);
-	}
-	tmp = ft_strjoin(*stash, buffer);
-	free(*stash);
-	if (!tmp)
-	{
-		free(buffer);
-		return (NULL);
-	}
-	*stash = tmp;
-	/**************************************************************************/
-	while (!ft_strchr(*stash, '\n'))
-	{
-		if (read(fd, buffer, BUFFER_SIZE) <= 0)
+		read_count = read(fd, buffer, BUFFER_SIZE);
+		if (read_count <= 0)
 		{
-			if (read(fd, buffer, BUFFER_SIZE) == 0)
+			if (read_count == 0 && ft_strlen(*stash) > 0)
 			{
 				free(buffer);
 				return (ft_strjoin("", *stash)); // leak?
@@ -63,6 +51,8 @@ static char	*parse_line(char **stash, int fd)
 			return (NULL);
 		}
 		*stash = tmp;
+		if (!ft_strchr(*stash, '\n'))
+			break ;
 	}
 	free(buffer);
 	if (ft_strchr(*stash, '\n'))
@@ -76,14 +66,17 @@ char	*get_next_line(int fd)
 	char		*tmp;
 	static char	*stash;
 
-	if (read(fd, 0, 0) < 0)
+	if (fd < 0 || read(fd, 0, 0) < 0 || BUFFER_SIZE == 0)
+	{
+		free(stash);
+		stash = NULL;
 		return (NULL);
+	}
 	if (!stash)
 	{
-		stash = malloc(sizeof(char));
+		stash = ft_calloc(sizeof(char), 1);
 		if (!stash)
 			return (NULL);
-		*stash = '\0';
 	}
 	line = parse_line(&stash, fd);
 	if (!line)
@@ -95,7 +88,7 @@ char	*get_next_line(int fd)
 	if (ft_strchr(stash, '\n'))
 	{
 		tmp = ft_substr(stash, ft_strchr(stash, '\n') - stash + 1,
-				ft_strlen(stash) - (ft_strchr(stash, '\n') - stash));
+				ft_strlen(stash) - (ft_strchr(stash, '\n') - stash)); //overflows and writes nonsense to tmp when at the end of stash
 		free(stash);
 		if (!tmp)
 		{
@@ -103,8 +96,13 @@ char	*get_next_line(int fd)
 			stash = NULL;
 			return (NULL);
 		}
-		stash = tmp;
 	}
+	else
+	{
+		free(stash);
+		tmp = NULL;
+	}
+	stash = tmp;
 	return (line);
 }
 
