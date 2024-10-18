@@ -38,11 +38,7 @@ void	*ft_calloc(size_t count, size_t size)
 	if (!area)
 		return (NULL);
 	while (b_size)
-	{
-		*(char *)area = 0;
-		area++;
-		b_size--;
-	}
+		*(char *)(area + --b_size) = 0;
 	return (area);
 }
 
