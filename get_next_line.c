@@ -23,7 +23,7 @@ static char	*parse_line(char **stash, int fd)
 
 	if (ft_strchr(*stash, '\n'))
 		return (ft_substr(*stash, 0, ft_strchr(*stash, '\n') - *stash + 1));
-	buffer = ft_calloc(sizeof(char), BUFFER_SIZE);
+	buffer = ft_calloc(sizeof(char), BUFFER_SIZE + 1);
 	if (!buffer)
 		return (NULL);
 	read_count = 1;
