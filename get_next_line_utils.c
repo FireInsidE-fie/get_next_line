@@ -25,6 +25,27 @@ size_t	ft_strlen(const char *s)
 	return (count);
 }
 
+/* ft_calloc()
+ * allocates memory according to count * size bytes, then sets it all to 0
+*/
+void	*ft_calloc(size_t count, size_t size)
+{
+	void	*area;
+	size_t	b_size;
+
+	b_size = count * size;
+	area = malloc(b_size);
+	if (!area)
+		return (NULL);
+	while (b_size)
+	{
+		*(char *)area = 0;
+		area++;
+		b_size--;
+	}
+	return (area);
+}
+
 /* ft_strchr()
  * locates the first occurence of the character c inside of *s, and returns a
  * pointer to it. if nothing is found, returns 0.
@@ -71,30 +92,6 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	}
 	substring[i] = '\0';
 	return (substring);
-}
-
-/* ft_strlcat()
- * concatenates the *dst and *src strings inside a new string of size dstsize.
- * keep in mind this might cut src or even dst if dstsize if insufficient.
-*/
-size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
-{
-	size_t	i;
-	size_t	j;
-	size_t	o_dstsize;
-
-	o_dstsize = ft_strlen(dst);
-	i = o_dstsize;
-	j = 0;
-	if (dstsize && dstsize > o_dstsize)
-	{
-		while (src[j] && i < dstsize - 1)
-			dst[i++] = src[j++];
-		dst[i] = '\0';
-	}
-	if (o_dstsize > dstsize)
-		return ((size_t)(dstsize + ft_strlen(src)));
-	return ((size_t)(o_dstsize + ft_strlen(src)));
 }
 
 /* ft_strjoin()
