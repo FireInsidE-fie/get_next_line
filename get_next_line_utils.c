@@ -97,10 +97,10 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*joined;
-	int		i;
-	int		j;
+	size_t	i;
+	size_t	j;
 
-	joined = malloc(ft_strlen(s1) + BUFFER_SIZE + 1);
+	joined = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (!joined)
 		return (NULL);
 	i = 0;
@@ -110,7 +110,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		s1++;
 	}
 	j = 0;
-	while (j < BUFFER_SIZE && s2[j])
+	while (j < ft_strlen(s2) && s2[j])
 	{
 		joined[i++] = s2[j];
 		j++;
