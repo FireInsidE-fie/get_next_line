@@ -12,9 +12,6 @@
 
 #include "get_next_line.h"
 
-/* parse_line()
- *
-*/
 static char	*parse_line(char **stash, int fd)
 {
 	char		*buffer;
@@ -33,12 +30,9 @@ static char	*parse_line(char **stash, int fd)
 		buffer[read_count] = 0;
 		if (read_count <= 0)
 		{
-			if (read_count == 0 && ft_strlen(*stash) > 0)
-			{
-				free(buffer);
-				return (ft_strjoin("", *stash)); // leak?
-			}
 			free(buffer);
+			if (read_count == 0 && ft_strlen(*stash) > 0)
+				return (ft_strjoin("", *stash));
 			free(*stash);
 			*stash = NULL;
 			return (NULL);
@@ -74,11 +68,9 @@ char	*get_next_line(int fd)
 		return (NULL);
 	}
 	if (!stash)
-	{
 		stash = ft_calloc(sizeof(char), 1);
-		if (!stash)
-			return (NULL);
-	}
+	if (!stash)
+		return (NULL);
 	line = parse_line(&stash, fd);
 	if (!line)
 	{
@@ -89,7 +81,7 @@ char	*get_next_line(int fd)
 	if (ft_strchr(stash, '\n'))
 	{
 		tmp = ft_substr(stash, ft_strchr(stash, '\n') - stash + 1,
-				ft_strlen(stash) - (ft_strchr(stash, '\n') - stash)); //overflows and writes nonsense to tmp when at the end of stash
+				ft_strlen(stash) - (ft_strchr(stash, '\n') - stash));
 		free(stash);
 		if (!tmp)
 		{
@@ -106,7 +98,7 @@ char	*get_next_line(int fd)
 	stash = tmp;
 	return (line);
 }
-
+/*
 #include <stdio.h>
 #include <fcntl.h>
 
@@ -142,3 +134,4 @@ int	main(int argc, char **argv)
 
 	close(fd2);
 }
+*/
