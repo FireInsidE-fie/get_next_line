@@ -24,10 +24,10 @@ static int	read_buffer(char **stash, int fd)
 	read_count = read(fd, buffer, BUFFER_SIZE);
 	buffer[read_count] = 0;
 	tmp = ft_strjoin(*stash, buffer);
+	free(buffer);
 	free(*stash);
 	if (!tmp)
 	{
-		free(buffer);
 		*stash = NULL;
 		return (-1);
 	}
