@@ -12,44 +12,50 @@
 
 #include "get_next_line.h"
 
+static int	read_buffer(char **stash, int fd)
+{
+	size_t	read_count;
+	char	*buffer;
+	char	*tmp;
+
+	buffer = ft_calloc(sizeof(char), BUFFER_SIZE + 1);
+	if (!buffer)
+		return (-1);
+	read_count = read(fd, buffer, BUFFER_SIZE);
+	buffer[read_count] = 0;
+	tmp = ft_strjoin(*stash, buffer);
+	free(*stash);
+	if (!tmp)
+	{
+		free(buffer);
+		*stash = NULL;
+		return (-1);
+	}
+	*stash = tmp;
+	return (read_count);
+}
+
 static char	*parse_line(char **stash, int fd)
 {
-	char		*buffer;
-	char		*tmp;
 	size_t		read_count;
 
 	if (ft_strchr(*stash, '\n'))
 		return (ft_substr(*stash, 0, ft_strchr(*stash, '\n') - *stash + 1));
-	buffer = ft_calloc(sizeof(char), BUFFER_SIZE + 1);
-	if (!buffer)
-		return (NULL);
 	read_count = 1;
 	while (read_count > 0)
 	{
-		read_count = read(fd, buffer, BUFFER_SIZE);
-		buffer[read_count] = 0;
+		read_count = read_buffer(stash, fd);
 		if (read_count <= 0)
 		{
-			free(buffer);
 			if (read_count == 0 && ft_strlen(*stash) > 0)
 				return (ft_strjoin("", *stash));
 			free(*stash);
 			*stash = NULL;
 			return (NULL);
 		}
-		tmp = ft_strjoin(*stash, buffer);
-		free(*stash);
-		if (!tmp)
-		{
-			free(buffer);
-			*stash = NULL;
-			return (NULL);
-		}
-		*stash = tmp;
 		if (ft_strchr(*stash, '\n'))
 			break ;
 	}
-	free(buffer);
 	if (ft_strchr(*stash, '\n'))
 		return (ft_substr(*stash, 0, ft_strchr(*stash, '\n') - *stash + 1));
 	return (ft_substr(*stash, 0, ft_strlen(*stash)));
