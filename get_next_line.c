@@ -61,10 +61,31 @@ static char	*parse_line(char **stash, int fd)
 	return (ft_substr(*stash, 0, ft_strlen(*stash)));
 }
 
+static int	catchup_stash(char **stash)
+{
+	char		*tmp;
+
+	if (ft_strchr(*stash, '\n'))
+	{
+		tmp = ft_substr(*stash, ft_strchr(*stash, '\n') - *stash + 1,
+				ft_strlen(*stash) - (ft_strchr(*stash, '\n') - *stash));
+		if (!tmp)
+		{
+			free(*stash);
+			*stash = NULL;
+			return (0);
+		}
+	}
+	else
+		tmp = NULL;
+	free(*stash);
+	*stash = tmp;
+	return (1);
+}
+
 char	*get_next_line(int fd)
 {
 	char		*line;
-	char		*tmp;
 	static char	*stash;
 
 	if (fd < 0 || read(fd, 0, 0) < 0 || BUFFER_SIZE == 0)
@@ -80,22 +101,11 @@ char	*get_next_line(int fd)
 	line = parse_line(&stash, fd);
 	if (!line)
 		return (NULL);
-	if (ft_strchr(stash, '\n'))
+	if (!catchup_stash(&stash))
 	{
-		tmp = ft_substr(stash, ft_strchr(stash, '\n') - stash + 1,
-				ft_strlen(stash) - (ft_strchr(stash, '\n') - stash));
-		if (!tmp)
-		{
-			free(stash);
-			free(line);
-			stash = NULL;
-			return (NULL);
-		}
+		free(line);
+		return (NULL);
 	}
-	else
-		tmp = NULL;
-	free(stash);
-	stash = tmp;
 	return (line);
 }
 /*
