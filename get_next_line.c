@@ -14,7 +14,7 @@
 
 static int	read_buffer(char **stash, int fd)
 {
-	size_t	read_count;
+	int		read_count;
 	char	*buffer;
 	char	*tmp;
 
@@ -37,7 +37,7 @@ static int	read_buffer(char **stash, int fd)
 
 static char	*parse_line(char **stash, int fd)
 {
-	size_t		read_count;
+	int		read_count;
 
 	if (ft_strchr(*stash, '\n'))
 		return (ft_substr(*stash, 0, ft_strchr(*stash, '\n') - *stash + 1));
@@ -79,28 +79,22 @@ char	*get_next_line(int fd)
 		return (NULL);
 	line = parse_line(&stash, fd);
 	if (!line)
-	{
-		free(stash);
-		stash = NULL;
 		return (NULL);
-	}
 	if (ft_strchr(stash, '\n'))
 	{
 		tmp = ft_substr(stash, ft_strchr(stash, '\n') - stash + 1,
 				ft_strlen(stash) - (ft_strchr(stash, '\n') - stash));
-		free(stash);
 		if (!tmp)
 		{
+			free(stash);
 			free(line);
 			stash = NULL;
 			return (NULL);
 		}
 	}
 	else
-	{
-		free(stash);
 		tmp = NULL;
-	}
+	free(stash);
 	stash = tmp;
 	return (line);
 }
