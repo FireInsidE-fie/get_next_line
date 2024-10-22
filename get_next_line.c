@@ -109,15 +109,11 @@ char	*get_next_line(int fd)
 	if (!stash)
 		return (NULL);
 	line = parse_line(&stash, fd);
-	if (!line)
+	if (!line || catchup_stash(&stash) == -1)
 	{
 		free(stash);
-		stash = NULL;
-		return (NULL);
-	}
-	if (catchup_stash(&stash) == -1)
-	{
 		free(line);
+		stash = NULL;
 		return (NULL);
 	}
 	return (line);
