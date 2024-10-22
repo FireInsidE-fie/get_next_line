@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 /* ft_strlen()
  * returns the size of string *s, trailing null character excluded.
@@ -70,11 +70,13 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	char	*substring;
 	size_t	i;
+	size_t	s_length;
 
-	if (start >= ft_strlen(s) + 1)
+	s_length = ft_strlen(s);
+	if (start >= s_length + 1)
 		return (malloc(sizeof(char)));
 	if (ft_strlen(s) - start < len)
-		substring = malloc((ft_strlen(s) - start + 1) * sizeof(char));
+		substring = malloc((s_length - start + 1) * sizeof(char));
 	else
 		substring = malloc((len + 1) * sizeof(char));
 	if (!substring)
@@ -99,8 +101,12 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	char	*joined;
 	size_t	i;
 	size_t	j;
+	size_t	s1_length;
+	size_t	s2_length;
 
-	joined = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	s1_length = ft_strlen(s1);
+	s2_length = ft_strlen(s2);
+	joined = malloc(s1_length + s2_length + 1);
 	if (!joined)
 		return (NULL);
 	i = 0;
@@ -110,7 +116,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		s1++;
 	}
 	j = 0;
-	while (j < ft_strlen(s2) && s2[j])
+	while (j < s2_length && s2[j])
 	{
 		joined[i++] = s2[j];
 		j++;
