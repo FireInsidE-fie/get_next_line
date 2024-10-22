@@ -12,6 +12,11 @@
 
 #include "get_next_line.h"
 
+/* read_buffer()
+ * invokes read() on the file descriptor given in the fd argument and stores the
+ * result in the stash.
+ * returns the number of bytes read by read()
+*/
 static int	read_buffer(char **stash, int fd)
 {
 	int		read_count;
@@ -61,6 +66,11 @@ static char	*parse_line(char **stash, int fd)
 	return (ft_substr(*stash, 0, ft_strlen(*stash)));
 }
 
+/* catchup_stash()
+ * this function creates a copy of the stash variable trimmed of the first
+ * \n terminated string that's inside.
+ * returns 0 on success, -1 on mem alloc failure
+*/
 static int	catchup_stash(char **stash)
 {
 	char		*tmp;
@@ -73,14 +83,14 @@ static int	catchup_stash(char **stash)
 		{
 			free(*stash);
 			*stash = NULL;
-			return (0);
+			return (-1);
 		}
 	}
 	else
 		tmp = NULL;
 	free(*stash);
 	*stash = tmp;
-	return (1);
+	return (0);
 }
 
 char	*get_next_line(int fd)
@@ -101,7 +111,7 @@ char	*get_next_line(int fd)
 	line = parse_line(&stash, fd);
 	if (!line)
 		return (NULL);
-	if (!catchup_stash(&stash))
+	if (catchup_stash(&stash) == -1)
 	{
 		free(line);
 		return (NULL);
