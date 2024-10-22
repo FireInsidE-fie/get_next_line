@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 /* read_buffer()
  * invokes read() on the file descriptor given in the fd argument and stores the
@@ -96,33 +96,35 @@ static int	catchup_stash(char **stash)
 char	*get_next_line(int fd)
 {
 	char		*line;
-	static char	*stash;
+	static char	*stashes[1024];
+	char		**stash;
 
+	stash = &stashes[fd];
 	if (fd < 0 || read(fd, 0, 0) < 0 || BUFFER_SIZE == 0)
 	{
-		free(stash);
-		stash = NULL;
+		free(*stash);
+		*stash = NULL;
 		return (NULL);
 	}
-	if (!stash)
-		stash = ft_calloc(sizeof(char), 1);
-	if (!stash)
+	if (!*stash)
+		*stash = ft_calloc(sizeof(char), 1);
+	if (!*stash)
 		return (NULL);
-	line = parse_line(&stash, fd);
+	line = parse_line(stash, fd);
 	if (!line)
 	{
-		free(stash);
-		stash = NULL;
+		free(*stash);
+		*stash = NULL;
 		return (NULL);
 	}
-	if (catchup_stash(&stash) == -1)
+	if (catchup_stash(stash) == -1)
 	{
 		free(line);
 		return (NULL);
 	}
 	return (line);
 }
-
+/*
 #include <stdio.h>
 #include <fcntl.h>
 
@@ -131,12 +133,13 @@ int	main(int argc, char **argv)
 {
 	int		fd1;
 	int		fd2;
-	char	*str;
+	//char	*str;
 
 	if (argc != 3)
 		return (0);
 
 	fd1 = open(argv[1], O_RDONLY);
+	fd2 = open(argv[2], O_RDONLY);
 	
 	printf("[!] - Reading two lines...\n");
 	printf("%s", get_next_line(fd1));
@@ -145,19 +148,20 @@ int	main(int argc, char **argv)
 	printf("%s", get_next_line(fd2));
 
 	 close(fd1);
-/*
-	fd2 = open(argv[1], O_RDONLY);
 
-	printf("\n\n[!] - Reading entire file...\n");
-	str = get_next_line(fd2);
-	while (str)
-	{
-		printf("%s", str);
-		str = get_next_line(fd2);
-	}
+	//fd2 = open(argv[1], O_RDONLY);
 
-	free(str);
+	//printf("\n\n[!] - Reading entire file...\n");
+	//str = get_next_line(fd2);
+	//while (str)
+	//{
+	//	printf("%s", str);
+	//	str = get_next_line(fd2);
+	//}
 
-	close(fd2);
-*/
+	//free(str);
+
+	//close(fd2);
+
 }
+*/
