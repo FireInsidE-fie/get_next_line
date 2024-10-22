@@ -15,7 +15,7 @@
 /* read_buffer()
  * invokes read() on the file descriptor given in the fd argument and stores the
  * result in the stash.
- * returns the number of bytes read by read()
+ * returns the number of bytes read
 */
 static int	read_buffer(char **stash, int fd)
 {
@@ -110,7 +110,11 @@ char	*get_next_line(int fd)
 		return (NULL);
 	line = parse_line(&stash, fd);
 	if (!line)
+	{
+		free(stash);
+		stash = NULL;
 		return (NULL);
+	}
 	if (catchup_stash(&stash) == -1)
 	{
 		free(line);
