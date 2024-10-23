@@ -14,7 +14,7 @@
 
 /* read_buffer()
  * invokes read() on the file descriptor given in the fd argument and stores the
- * result in the stash.
+ * result in the stash variable.
  * returns the number of bytes read
 */
 static int	read_buffer(char **stash, int fd)
@@ -40,6 +40,13 @@ static int	read_buffer(char **stash, int fd)
 	return (read_count);
 }
 
+/* parse_line()
+ * checks the stash for a new line character. if one is found, return the
+ * corresponding line, if not, it invokes read_buffer() to read from the fd,
+ * until stash contains a new line character or the end of the file descriptor's
+ * content is reached (read_count == 0).
+ * returns the line found, either to a \n character or to the end of the fd.
+*/
 static char	*parse_line(char **stash, int fd)
 {
 	int		read_count;
@@ -59,10 +66,8 @@ static char	*parse_line(char **stash, int fd)
 			return (NULL);
 		}
 		if (ft_strchr(*stash, '\n'))
-			break ;
+			return (ft_substr(*stash, 0, ft_strchr(*stash, '\n') - *stash + 1));
 	}
-	if (ft_strchr(*stash, '\n'))
-		return (ft_substr(*stash, 0, ft_strchr(*stash, '\n') - *stash + 1));
 	return (ft_substr(*stash, 0, ft_strlen(*stash)));
 }
 
