@@ -78,12 +78,14 @@ static char	*parse_line(char **stash, int fd)
 */
 static int	catchup_stash(char **stash)
 {
-	char		*tmp;
+	char	*nl_index;
+	char	*tmp;
 
-	if (ft_strchr(*stash, '\n'))
+	nl_index = ft_strchr(*stash, '\n');
+	if (nl_index)
 	{
-		tmp = ft_substr(*stash, ft_strchr(*stash, '\n') - *stash + 1,
-				ft_strlen(*stash) - (ft_strchr(*stash, '\n') - *stash));
+		tmp = ft_substr(*stash, nl_index - *stash + 1,
+				ft_strlen(*stash) - (nl_index - *stash));
 		if (!tmp)
 		{
 			free(*stash);
@@ -98,11 +100,10 @@ static int	catchup_stash(char **stash)
 	return (0);
 }
 
-
 char	*get_next_line(int fd)
 {
 	char		*line;
-	static char	*stashes[1024];
+	static char	*stashes[256];
 	char		**stash;
 
 	stash = &stashes[fd];
@@ -149,7 +150,7 @@ int	main(int argc, char **argv)
 	printf("%s", get_next_line(fd1));
 	printf("%s", get_next_line(fd2));
 
-	 close(fd1);
+	close(fd1);
 
 	//fd2 = open(argv[1], O_RDONLY);
 
