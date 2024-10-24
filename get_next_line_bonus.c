@@ -15,7 +15,7 @@
 /* read_buffer()
  * invokes read() on the file descriptor given in the fd argument and stores the
  * result in the stash variable.
- * returns the number of bytes read
+ * returns the number of bytes read.
 */
 static int	read_buffer(char **stash, int fd)
 {
@@ -42,7 +42,7 @@ static int	read_buffer(char **stash, int fd)
 
 /* parse_line()
  * checks the stash for a new line character. if one is found, return the
- * corresponding line, if not, it invokes read_buffer() to read from the fd,
+ * corresponding line, if not, it invokes read_buffer() to read from the fd
  * until stash contains a new line character or the end of the file descriptor's
  * content is reached (read_count == 0).
  * returns the line found, either to a \n character or to the end of the fd.
@@ -73,8 +73,9 @@ static char	*parse_line(char **stash, int fd)
 
 /* catchup_stash()
  * this function creates a copy of the stash variable trimmed of the first
- * \n terminated string that's inside.
- * returns 0 on success, -1 on mem alloc failure
+ * \n terminated string that's inside, and replaces the original stash with the
+ * copy.
+ * returns 0 on success, -1 on mem alloc failure.
 */
 static int	catchup_stash(char **stash)
 {
@@ -100,6 +101,14 @@ static int	catchup_stash(char **stash)
 	return (0);
 }
 
+/* get_next_line()
+ * this function reads from the <fd> file descriptor and returns the first line
+ * it founds. a line is a string terminated by either a new line character or
+ * the end of the file descriptor's contents. see above functions for each step
+ * of the execution.
+ * returns a malloced string containing the line it found, or NULL if an error
+ * occured somewhere (most likely malloc error).
+*/
 char	*get_next_line(int fd)
 {
 	char		*line;
