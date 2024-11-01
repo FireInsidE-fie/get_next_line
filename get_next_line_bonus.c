@@ -116,7 +116,7 @@ char	*get_next_line(int fd)
 	char		**stash;
 
 	stash = &stashes[fd];
-	if (fd < 0 || read(fd, 0, 0) < 0 || BUFFER_SIZE == 0)
+	if (fd < 0 || fd > 256 || read(fd, 0, 0) < 0 || BUFFER_SIZE == 0)
 	{
 		free(*stash);
 		*stash = NULL;
