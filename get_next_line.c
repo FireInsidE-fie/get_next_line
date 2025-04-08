@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: estettle <estettle@student.42lausanne.ch>  +#+  +:+       +#+        */
+/*   By: fireinside <firefoxSpinnie@protonmail.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 16:06:01 by estettle          #+#    #+#             */
-/*   Updated: 2024/10/11 16:11:08 by estettle         ###   ########.fr       */
+/*   Updated: 2025/04/08 12:01:08 by fireinside       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-/* read_buffer()
+/**
  * invokes read() on the file descriptor given in the fd argument and stores the
  * result in the stash variable.
  * returns the number of bytes read.
@@ -40,7 +40,7 @@ static int	read_buffer(char **stash, int fd)
 	return (read_count);
 }
 
-/* parse_line()
+/**
  * checks the stash for a new line character. if one is found, return the
  * corresponding line, if not, it invokes read_buffer() to read from the fd
  * until stash contains a new line character or the end of the file descriptor's
@@ -71,7 +71,7 @@ static char	*parse_line(char **stash, int fd)
 	return (ft_substr(*stash, 0, ft_strlen(*stash)));
 }
 
-/* catchup_stash()
+/**
  * this function creates a copy of the stash variable trimmed of the first
  * \n terminated string that's inside, and replaces the original stash with the
  * copy.
@@ -101,9 +101,9 @@ static int	catchup_stash(char **stash)
 	return (0);
 }
 
-/* get_next_line()
+/**
  * this function reads from the <fd> file descriptor and returns the first line
- * it founds. a line is a string terminated by either a new line character or
+ * it finds. a line is a string terminated by either a new line character or
  * the end of the file descriptor's contents. see above functions for each step
  * of the execution.
  * returns a malloced string containing the line it found, or NULL if an error
